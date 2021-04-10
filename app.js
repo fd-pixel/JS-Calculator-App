@@ -40,15 +40,25 @@ const numbersArray = [
 let previousOperand = "";
 let currentOperand = "";
 let operation = undefined;
+let computation;
 
 // Functions
 
 function DisplayNumbers() {
-  previousElement.innerText = previousOperand;
+  if (operation) {
+    previousElement.innerText = `${previousOperand} ${operation}`;
+  } else {
+    previousElement.innerText = previousOperand;
+  }
+
   currentElement.innerText = currentOperand;
 }
 
 function AppendNumber(number) {
+  if (number === "." && currentOperand.includes(".")) return;
+  if (number === 0 && currentOperand === "0") return;
+  if (currentOperand.length > 7) return;
+
   currentOperand = currentOperand.toString() + number.toString();
   DisplayNumbers();
 }
@@ -64,7 +74,6 @@ function Compute() {
   console.log("COMPUTE");
   const previous = parseFloat(previousOperand);
   const current = parseFloat(currentOperand);
-  let computation;
 
   switch (operation) {
     case "+":
@@ -93,6 +102,23 @@ function Compute() {
   DisplayNumbers();
 }
 
+function AllClear() {
+  currentOperand = "";
+  previousOperand = "";
+  operation = undefined;
+  DisplayNumbers();
+}
+
+function PlusMinus() {
+  currentOperand = currentOperand * -1;
+  DisplayNumbers();
+}
+
+function Percent() {
+  currentOperand = currentOperand / 100;
+  DisplayNumbers();
+}
+
 // Add event listener to operators buttons
 
 additionButton.addEventListener("click", () => {
@@ -117,12 +143,34 @@ equalButton.addEventListener("click", () => {
 
 // Add event listener to top buttons
 
+acButton.addEventListener("click", () => {
+  AllClear();
+});
+
+pmButton.addEventListener("click", () => {
+  PlusMinus();
+});
+
+percentButton.addEventListener("click", () => {
+  Percent();
+});
+
 // Add event listener to numbers buttons
 
 for (let i = 0; i < numbersArray.length; i++) {
   const number = numbersArray[i];
 
   number.addEventListener("click", () => {
+    do {
+        if(computation){
+            AllClear()
+            computation = "";
+        }
+    } while(false)
     AppendNumber(i);
   });
 }
+
+decimalButton.addEventListener("click", () => {
+  AppendNumber(decimalButton.innerText);
+});
