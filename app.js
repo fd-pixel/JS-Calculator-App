@@ -40,7 +40,7 @@ const numbersArray = [
 let previousOperand = "";
 let currentOperand = "";
 let operation = undefined;
-let computation;
+let temporaryOperand = "";
 
 // Functions
 
@@ -55,15 +55,30 @@ function DisplayNumbers() {
 }
 
 function AppendNumber(number) {
-  if (number === "." && currentOperand.includes(".")) return;
+  console.log("NUMBER: ", number);
+  
+    if (number === "." && currentOperand.includes(".")) return;
   if (number === 0 && currentOperand === "0") return;
   if (currentOperand.length > 7) return;
+
+  
 
   currentOperand = currentOperand.toString() + number.toString();
   DisplayNumbers();
 }
 
 function ChooseOperation(selectedOperation) {
+  if (temporaryOperand) {
+    previousOperand = temporaryOperand.toString();
+    currentOperand = "";
+    temporaryOperand = "";
+    operation = selectedOperation;
+    DisplayNumbers();
+    return;
+  }
+
+  if (currentOperand === "") return;
+
   previousOperand = currentOperand;
   currentOperand = "";
   operation = selectedOperation;
@@ -74,6 +89,9 @@ function Compute() {
   console.log("COMPUTE");
   const previous = parseFloat(previousOperand);
   const current = parseFloat(currentOperand);
+  let computation;
+
+  if (isNaN(previous) || isNaN(current) ) return;
 
   switch (operation) {
     case "+":
@@ -100,12 +118,15 @@ function Compute() {
   operation = undefined;
   previousOperand = "";
   DisplayNumbers();
+  temporaryOperand = currentOperand;
+  currentOperand = "";
 }
 
 function AllClear() {
   currentOperand = "";
   previousOperand = "";
   operation = undefined;
+  temporaryOperand = "";
   DisplayNumbers();
 }
 
@@ -161,16 +182,36 @@ for (let i = 0; i < numbersArray.length; i++) {
   const number = numbersArray[i];
 
   number.addEventListener("click", () => {
-    do {
-        if(computation){
-            AllClear()
-            computation = "";
-        }
-    } while(false)
     AppendNumber(i);
+    temporaryOperand = "";
   });
 }
 
 decimalButton.addEventListener("click", () => {
   AppendNumber(decimalButton.innerText);
 });
+
+document.addEventListener('keydown', (event) => {
+
+    switch(event.keyCode){
+        case 96:
+        case 97:
+        case 98:
+        case 99:
+        case 100:
+        case 101:
+        case 102:
+        case 103:
+        case 104:
+        case 105:
+            AppendNumber(`${event.key}`);
+            break;
+        case 106:
+        case 107:
+        case 109:
+        case 111:
+            ChooseOperation(`${event.key}`)
+        case 13:
+            Compute();
+    }
+})
