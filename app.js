@@ -8,7 +8,7 @@ const pmButton = document.querySelector(".pm")
 const percentButton = document.querySelector(".percent")
 
 const additionButton = document.querySelector(".addition")
-const substractionButton = document.querySelector(".substraction")
+const substractionButton = document.querySelector(".subtraction")
 const multiplicationButton = document.querySelector(".multiplication")
 const divisionButton = document.querySelector(".division")
 const equalButton = document.querySelector(".equal")
@@ -39,7 +39,7 @@ const numbersArray = [
     number9
 ]
 
-let previousOperand = "123";
+let previousOperand = "";
 let currentOperand = "";
 
 
@@ -58,8 +58,34 @@ function AppendNumber(number){
     DisplayNumbers();
 }
 
+function ChooseOperation(selectedOperation){
+    previousOperand = currentOperand;
+    currentOperand = "";
+    DisplayNumbers();
+}
+
 
 // Add event listener to operators buttons
+
+additionButton.addEventListener("click", () => {
+    ChooseOperation("+");
+})
+
+substractionButton.addEventListener("click", () => {
+    ChooseOperation("-");
+})
+
+multiplicationButton.addEventListener("click", () => {
+    ChooseOperation("*");
+})
+
+divisionButton.addEventListener("click", () => {
+    ChooseOperation("/");
+})
+
+equalButton.addEventListener("click", () => {
+    console.log("equalButton")
+})
 
 
 
